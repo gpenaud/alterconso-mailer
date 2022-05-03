@@ -1,2 +1,2 @@
 # cagette-mailer
-A tinymicro-service  mailer for cagette project
+A tiny micro-service  mailer for cagette project
