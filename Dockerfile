@@ -14,4 +14,4 @@ RUN pipenv install --deploy --ignore-pipfile
 
 EXPOSE 5000
 
-CMD ["pipenv", "run", "python", "api.py"]
+CMD ["pipenv", "run", "python", "mailer.py"]
