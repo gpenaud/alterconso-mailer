@@ -48,11 +48,12 @@ def send_route():
 
     try:
         server.sendmail(msg['From'], recipients, msg.as_string())
-        return "\nmail sent successfully !\n\n"
+        ret = {"status": "sent"}
     except smtplib.SMTPException as e:
-        print(e)
+        ret = e
 
     server.quit()
+    return ret
 
 
 app.run(
