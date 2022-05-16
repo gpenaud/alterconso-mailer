@@ -1,0 +1,6 @@
+.gitignore
+environment.txt
+LICENSE
+Makefile
+README.md
+test-data.json
