@@ -28,6 +28,7 @@ def send_route():
         raise UnconfiguredEnvironment
 
     server = smtplib.SMTP(smtp_host, smtp_port)
+    server.set_debuglevel(1)
     server.connect(smtp_host, smtp_port)
     server.ehlo()
     server.starttls()
