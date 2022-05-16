@@ -1,9 +1,9 @@
 {
     "html": "<html><head>entête</head><body><p><b>Python Mail Test</b><br>This is HTML email with attachment.<br>Click on <a href=\"https://fedingo.com\">Fedingo Resources</a>for more python articles.</p></body></html>",
     "text": "bonjour",
-    "subject": "test",
-    "from_email": "admin@cagette.net",
-    "from_name": "Alix Vignigier",
+    "subject": "Test mail from development mailer",
+    "from_email": "cagette@leportail.org",
+    "from_name": "Administrateur Cagette",
     "to": [{
       "email": "guillaume.penaud@gmail.com",
       "name": "Guillaume Penaud",
