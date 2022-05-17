@@ -24,17 +24,16 @@ def send_route():
     smtp_user     = os.environ.get("SMTP_USER", None)
     smtp_password = os.environ.get("SMTP_PASSWORD", None)
 
-    if (not smtp_host or not smtp_port or not smtp_user or not smtp_password):
-        raise UnconfiguredEnvironment
-
-    server = smtplib.SMTP(smtp_host, smtp_port)
-    server.set_debuglevel(1)
-
     print(smtp_host)
     print(smtp_port)
     print(smtp_user)
     print(smtp_password)
 
+    if (not smtp_host or not smtp_port or not smtp_user or not smtp_password):
+        raise UnconfiguredEnvironment
+
+    server = smtplib.SMTP(smtp_host, smtp_port)
+    server.set_debuglevel(1)
     server.connect(smtp_host, smtp_port)
     server.ehlo()
     server.starttls()
