@@ -29,6 +29,12 @@ def send_route():
 
     server = smtplib.SMTP(smtp_host, smtp_port)
     server.set_debuglevel(1)
+
+    print(smtp_host)
+    print(smtp_port)
+    print(smtp_user)
+    print(smtp_password)
+
     server.connect(smtp_host, smtp_port)
     server.ehlo()
     server.starttls()
