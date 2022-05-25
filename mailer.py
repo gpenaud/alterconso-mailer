@@ -14,6 +14,10 @@ class UnconfiguredEnvironment(Exception):
 
 app = Flask(__name__)
 
+@app.route('/healthcheck', methods=['GET'])
+def healthcheck():
+  return "ok", status.HTTP_200_OK
+
 @app.route('/send', methods=['POST'])
 def send_route():
     data = request.get_json(force=True)
