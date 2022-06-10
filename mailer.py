@@ -1,12 +1,15 @@
-import smtplib
+from flask import Flask
+from flask_restful import Resource, Api, request, reqparse, abort, marshal, fields
+
+from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formatdate
+
 import os
 from os import environ
 
-from flask import Flask
-from flask_restful import Resource, Api, request, reqparse, abort, marshal, fields
+import smtplib
 
 class UnconfiguredEnvironment(Exception):
     """base class for new exception"""
@@ -32,7 +35,6 @@ def send_route():
         raise UnconfiguredEnvironment
 
     server = smtplib.SMTP(smtp_host, smtp_port)
-    server.set_debuglevel(1)
     server.connect(smtp_host, smtp_port)
     server.ehlo()
     server.starttls()
@@ -42,7 +44,8 @@ def send_route():
     msg['Subject'] = data["subject"]
     msg['From']    = data["from_email"]
     recipients     = [ value['email'] for value in data["to"] ]
-    msg['To']      = ', '.join(recipients)
+    msg['To']      = data["from_email"]
+    msg['Bcc']     = ', '.join(recipients)
     msg["Date"]    = formatdate(localtime=True)
 
     part = MIMEText(data["html"], "html")
@@ -58,8 +61,8 @@ def send_route():
         ret = e
 
     server.quit()
-    return ret
 
+    return ret
 
 app.run(
     host=os.environ.get("MAILER_HOST", "127.0.0.1"),
