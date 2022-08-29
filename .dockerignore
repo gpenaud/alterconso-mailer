@@ -1,9 +1,0 @@
-.gitignore
-environment.txt
-LICENSE
-Makefile
-README.md
-Dockerfile
-tests/data.json
-secrets.enc.yaml
-secrets.dec.yaml
