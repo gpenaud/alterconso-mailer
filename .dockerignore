@@ -3,4 +3,7 @@ environment.txt
 LICENSE
 Makefile
 README.md
-test-data.json
+Dockerfile
+tests/data.json
+secrets.enc.yaml
+secrets.dec.yaml

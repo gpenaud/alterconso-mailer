@@ -9,10 +9,13 @@ from email.utils import formatdate
 import os
 from os import environ
 
+import yaml
 import smtplib
+import sys
 
 class UnconfiguredEnvironment(Exception):
     """base class for new exception"""
+    print("Exception was raised")
     pass
 
 app = Flask(__name__)
@@ -25,11 +28,17 @@ def healthcheck():
 def send_route():
     data = request.get_json(force=True)
 
+    with open(r'config.yaml') as file:
+        config = yaml.load(file, Loader=yaml.FullLoader)
+
+    with open(r'secrets.yaml') as file:
+        secrets = yaml.load(file, Loader=yaml.FullLoader)
+
     # environment variables
-    smtp_host     = os.environ.get("SMTP_HOST", None)
-    smtp_port     = os.environ.get("SMTP_PORT", None)
-    smtp_user     = os.environ.get("SMTP_USER", None)
-    smtp_password = os.environ.get("SMTP_PASSWORD", None)
+    smtp_host     = config["smtp_host"]
+    smtp_port     = config["smtp_port"]
+    smtp_user     = secrets["smtp_user"]
+    smtp_password = secrets["smtp_password"]
 
     if (not smtp_host or not smtp_port or not smtp_user or not smtp_password):
         raise UnconfiguredEnvironment
@@ -61,10 +70,9 @@ def send_route():
         ret = e
 
     server.quit()
-
     return ret
 
 app.run(
-    host=os.environ.get("MAILER_HOST", "127.0.0.1"),
+    host=os.environ.get("MAILER_HOST", "0.0.0.0"),
     port=os.environ.get("MAILER_PORT", "5000"),
 )

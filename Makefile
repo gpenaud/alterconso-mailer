@@ -10,41 +10,57 @@ BUILD_TIME  ?= $(shell date -u '+%Y-%m-%d_%H:%M:%S')
 ## Build webapp image
 build:
 	@[ "${CURRENT_TAG}" ] || echo "no tag found at commit ${COMMIT}"
-	@[ "${CURRENT_TAG}" ] && docker build --tag cagette/mailer:${CURRENT_TAG} .
+	@[ "${CURRENT_TAG}" ] && docker build --tag alterconso/mailer:${CURRENT_TAG} .
 
 ## Tag webapp image
 tag:
 	@[ "${CURRENT_TAG}" ] || echo "no tag found at commit ${COMMIT}"
-	@[ "${CURRENT_TAG}" ] && docker tag cagette/mailer:${CURRENT_TAG} rg.fr-par.scw.cloud/le-portail/cagette/mailer:${CURRENT_TAG}
+	@[ "${CURRENT_TAG}" ] && docker tag alterconso/mailer:${CURRENT_TAG} rg.fr-par.scw.cloud/le-portail/alterconso/mailer:${CURRENT_TAG}
 
 ## Push webapp image to scaleway repository
 push:
 	@[ "${CURRENT_TAG}" ] || echo "no tag found at commit ${COMMIT}"
-	@[ "${CURRENT_TAG}" ] && docker push rg.fr-par.scw.cloud/le-portail/cagette/mailer:${CURRENT_TAG}
+	@[ "${CURRENT_TAG}" ] && docker push rg.fr-par.scw.cloud/le-portail/alterconso/mailer:${CURRENT_TAG}
 
 ## Build, Tag, then Push image at ${tag} version
 publish: build tag push
 
+# ## Run a standalone mailer
+# up:
+# 	docker build --tag alterconso/mailer:latest .
+# 	# source environment.txt && \
+# 	docker run --name alterconso-mailer-standalone --interactive --tty -p 5000:5000 \
+# 			--env FLASK_APP=${FLASK_APP} \
+# 			--env FLASK_ENV=${FLASK_ENV} \
+# 		alterconso/mailer:latest
+
 ## Run a standalone mailer
 up:
-	docker build --tag cagette/mailer:latest .
-	source environment.txt && \
-	docker run --name cagette-mailer-standalone --interactive --tty -p 5000:5000 \
-			--env SMTP_HOST=${SMTP_HOST} \
-			--env SMTP_PORT=${SMTP_PORT} \
-			--env SMTP_USER=${SMTP_USER} \
-			--env SMTP_PASSWORD=${SMTP_PASSWORD} \
+	docker build --tag alterconso/mailer:latest .
+	# source environment.txt && \
+	docker run --name alterconso-mailer-standalone --interactive --tty -p 5000:5000 \
 			--env FLASK_APP=${FLASK_APP} \
 			--env FLASK_ENV=${FLASK_ENV} \
-		cagette/mailer:latest
+		alterconso/mailer:latest
 
 ## Stop the running mailer instance
 down:
-	docker rm --force cagette-mailer-standalone
+	docker rm --force alterconso-mailer-standalone
 
 ## Open a interactive bash shell in the running mailer instance
 enter:
-	docker exec --interactive --tty cagette-mailer-standalone /bin/bash
+	docker exec --interactive --tty alterconso-mailer-standalone /bin/bash
+
+sops-encryt:
+	sops --encrypt secrets.yaml > secrets.enc.yaml
+	mv --force secrets.enc.yaml secrets.yaml
+
+sops-decrypt:
+	sops --decrypt secrets.yaml > secrets.dec.yaml
+	mv --force secrets.dec.yaml secrets.yaml
+
+test:
+	@bash tests/send.sh
 
 ## Colors
 COLOR_RESET       = $(shell tput sgr0)

@@ -1,0 +1,2 @@
+smtp_host: mail.leportail.org
+smtp_port: 587
