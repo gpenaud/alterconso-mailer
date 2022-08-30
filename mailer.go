@@ -31,12 +31,11 @@ func (s *SMTPServer) ServerName() string {
 }
 
 // EmailController controls email operations
-func EmailController(to, cc, bcc, sender, subject string) {
+func EmailController(subject, body, sender, to, cc, bcc string) {
 
 	toArr := strings.Split(to, ";")
 	ccArr := strings.Split(cc, ";")
 	bccArr := strings.Split(bcc, ";")
-	body := "I am here"
 	request := Mail{
 		Sender: sender,
 		To: toArr,
@@ -72,18 +71,20 @@ func send(mailObject Mail) {
 	mail := Mail{}
 	mail.Sender = mailObject.Sender
 	mail.To = mailObject.To
+	mail.Cc = mailObject.Cc
+	mail.Bcc = mailObject.Bcc
 	mail.Subject = mailObject.Subject
 	mail.Body = mailObject.Body
 
 	messageBody := mail.BuildMessage()
 
-	smtpServer := SMTPServer{Host: "smtp.gmail.com", Port: "465"}
+	smtpServer := SMTPServer{Host: "ssl0.ovh.net", Port: "465"}
 	smtpServer.TLSConfig = &tls.Config{
 		InsecureSkipVerify: true,
 		ServerName:         smtpServer.Host,
 	}
 
-	auth := smtp.PlainAuth("", mail.Sender, "password", smtpServer.Host)
+	auth := smtp.PlainAuth("", mail.Sender, "elisabeth", smtpServer.Host)
 
 	conn, err := tls.Dial("tcp", smtpServer.ServerName(), smtpServer.TLSConfig)
 	if err != nil {
@@ -104,8 +105,17 @@ func send(mailObject Mail) {
 	if err = client.Mail(mail.Sender); err != nil {
 		log.Panic(err)
 	}
-	receivers := append(mail.To, mail.Cc...)
-	receivers = append(receivers, mail.Bcc...)
+
+	receivers := mail.To
+
+	if len(mail.Cc) > 0 && mail.Cc[0] != "" {
+		receivers = append(receivers, mail.Cc...)
+	}
+
+	if len(mail.Bcc) > 0 && mail.Bcc[0] != "" {
+		receivers = append(receivers, mail.Bcc...)
+	}
+
 	for _, k := range receivers {
 		log.Println("sending to: ", k)
 		if err = client.Rcpt(k); err != nil {
@@ -132,9 +142,8 @@ func send(mailObject Mail) {
 	client.Quit()
 
 	log.Println("Mail sent successfully")
-
 }
 
 func main() {
-	EmailController("reciever@mail.com", "cc1@mail.com; cc2@mail.com", "bcc@mail.com; bcc2@mail.com", "sender@mail.com", "Mail_Subject")
+	EmailController("mail de test", "Envoyé par mailer.go", "alterconso@leportail.org", "alterconso@leportail.org", "", "guillaume.penaud@gmail.com")
 }
