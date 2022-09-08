@@ -1,0 +1,5 @@
+.git
+.air.toml
+Dockerfile
+Dockerfile.development
+Makefile
