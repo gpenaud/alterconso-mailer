@@ -8,8 +8,8 @@ COMMIT			?= $(shell git rev-parse --short HEAD)
 BUILD_TIME  ?= $(shell date -u '+%Y-%m-%d_%H:%M:%S')
 
 ## Run a standalone mailer
-up:
-	docker build --file _build/Dockerfile.development --tag alterconso/mailer-development:latest .
+dev:
+	docker build --file Dockerfile.development --tag alterconso/mailer-development:latest .
 	docker run --name alterconso-mailer-development \
 		--interactive \
 		--tty \
@@ -17,9 +17,18 @@ up:
 		--mount type=bind,source=$(shell pwd),target=/application  \
 	alterconso/mailer-development:latest
 
+## Run a standalone mailer
+prod:
+	docker build --file Dockerfile --tag alterconso/mailer-production:latest .
+	docker run --name alterconso-mailer-production \
+		--interactive \
+		--tty \
+		-p 5000:5000 \
+	alterconso/mailer-production:latest
+
 ## Stop the running mailer instance
 down:
-	docker rm --force alterconso-mailer-development
+	docker rm --force alterconso-mailer-development alterconso-mailer-production
 
 ## Open a interactive bash shell in the running mailer instance
 enter:
@@ -34,10 +43,13 @@ sops-decrypt:
 test:
 	@bash tests/send.sh
 
+test-warn-opening-order:
+	@go run main.go warn-opening-order
+
 ## Build webapp image
 build:
 	@[ "${CURRENT_TAG}" ] || echo "no tag found at commit ${COMMIT}"
-	@[ "${CURRENT_TAG}" ] && docker build --tag alterconso/mailer:${CURRENT_TAG} .
+	@[ "${CURRENT_TAG}" ] && docker build --file _build/Dockerfile --tag alterconso/mailer:${CURRENT_TAG} .
 
 ## Tag webapp image
 tag:

@@ -77,12 +77,12 @@ func EmailController(writer http.ResponseWriter, request *http.Request) {
   from_chunk := []string { params.FromEmail }
   bcc_chunks = append(bcc_chunks, from_chunk)
 
-  for _, chunk := range chunks {
+  for _, chunk := range bcc_chunks {
     mail_request := Mail {
       Sender: params.FromEmail,
       To: to,
       Cc: cc,
-      Bcc: bcc_chunks,
+      Bcc: chunk,
       Subject: params.Subject,
       Body: params.Body,
     }
