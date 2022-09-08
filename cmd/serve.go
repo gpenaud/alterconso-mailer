@@ -25,7 +25,7 @@ func init() {
 //runs the server and also does the calculations and send result to client
 func runServer(cmd *cobra.Command, args []string) {
   router := mux.NewRouter()
-  router.HandleFunc("/send", internal.EmailController).Methods("GET")
+  router.HandleFunc("/send", internal.EmailController).Methods("POST")
   log.Info("Routes are initialized")
 
   server_address :=

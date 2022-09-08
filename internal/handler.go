@@ -28,7 +28,7 @@ func (m MailParameters) MailList() []string {
 
 type MailParameters struct {
   Subject string    `json:"subject"`
-  Body string       `json:"body"`
+  Body string       `json:"html"`
   FromName string   `json:"from_name"`
   FromEmail string  `json:"from_email"`
   To []To           `json:"to"`
