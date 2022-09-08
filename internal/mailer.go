@@ -3,10 +3,18 @@ package internal
 import (
 	"crypto/tls"
 	"fmt"
-	"log"
+	log     "github.com/sirupsen/logrus"
 	"net/smtp"
 	"strings"
+	// viper   "github.com/spf13/viper"
 )
+
+type SMTPServer struct {
+	Host      string
+	Port      string
+	Password  string
+	TLSConfig *tls.Config
+}
 
 // Mail ....
 type Mail struct {
@@ -16,13 +24,6 @@ type Mail struct {
 	Bcc     []string
 	Subject string
 	Body    string
-}
-
-// SMTPServer ...
-type SMTPServer struct {
-	Host      string
-	Port      string
-	TLSConfig *tls.Config
 }
 
 // ServerName ...
@@ -50,17 +51,16 @@ func (mail *Mail) BuildMessage() string {
 	return header
 }
 
-func send(mail Mail) {
-	messageBody := mail.BuildMessage()
+func send(smtpServer SMTPServer, mail Mail) {
+	log.Info(smtpServer)
 
-	smtpServer := SMTPServer{Host: "ssl0.ovh.net", Port: "465"}
+	messageBody := mail.BuildMessage()
 	smtpServer.TLSConfig = &tls.Config{
 		InsecureSkipVerify: true,
 		ServerName:         smtpServer.Host,
 	}
 
-	auth := smtp.PlainAuth("", mail.Sender, "elisabeth", smtpServer.Host)
-
+	auth := smtp.PlainAuth("", mail.Sender, smtpServer.Password, smtpServer.Host)
 	conn, err := tls.Dial("tcp", smtpServer.ServerName(), smtpServer.TLSConfig)
 	if err != nil {
 		log.Panic(err)
@@ -116,5 +116,6 @@ func send(mail Mail) {
 
 	client.Quit()
 
+	log.Println(messageBody)
 	log.Println("Mail sent successfully")
 }

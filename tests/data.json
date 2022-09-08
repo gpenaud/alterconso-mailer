@@ -1,0 +1,44 @@
+{
+    "subject": "Alterconso - Mail de test pour l'envoi automatique lors des ouvertures / fermeture de commandes",
+    "body": "<html><head>entête</head><body><p><b>Python Mail Test</b><br>This is HTML email with attachment.<br>Click on <a href=\"https://fedingo.com\">Fedingo Resources</a>for more python articles.</p></body></html>",
+    "from_name": "Administrateur Du Portail",
+    "from_email": "alterconso@leportail.org",
+    "to": [{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer1@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer2@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer3@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer4@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer5@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer6@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer7@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer8@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer9@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer10@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer11@gmail.com"
+    },{
+      "name": "Guillaume Penaud",
+      "email": "guillaume.penaud+testmailer12@gmail.com"
+    }],
+    "Headers": {}
+}

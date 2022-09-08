@@ -4,47 +4,13 @@ import (
   fmt     "fmt"
   http    "net/http"
   json    "encoding/json"
-  log     "github.com/sirupsen/logrus"
+  // log     "github.com/sirupsen/logrus"
   // mux     "github.com/gorilla/mux"
   // "github.com/gpenaud/alterconso-mailer/internal/user"
   "io/ioutil"
   // "html"
+  viper   "github.com/spf13/viper"
 )
-
-var handlerLog *log.Entry
-
-func init() {
-  fmt.Println("init")
-}
-
-// -------------------------------------------------------------------------- //
-// Common functions for handlers
-
-func respondHTTPCodeOnly(w http.ResponseWriter, code int) {
-  w.WriteHeader(code)
-}
-
-func respondWithError(w http.ResponseWriter, code int, message string) {
-  handlerLog.Error(message)
-  respondWithJSON(w, code, map[string]string{"error": message})
-}
-
-func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-  response, err := json.Marshal(payload)
-  if err != nil {
-    fmt.Printf("Error: %s", err)
-    return;
-  }
-  // response := payload
-  log.Info(fmt.Sprintf("Payload: %s", payload))
-  log.Info(fmt.Sprintf("JSON response: %s", response))
-
-  w.Header().Set("Content-Type", "application/json")
-  w.WriteHeader(code)
-  w.Write(response)
-
-  fmt.Println(string(response))
-}
 
 type To struct {
   Name string  `json:"name"`
@@ -69,7 +35,24 @@ type MailParameters struct {
   Headers struct {} `json:"headers"`
 }
 
-func (a *Application) emailController(writer http.ResponseWriter, request *http.Request) {
+func chunkSlice(slice []string, chunkSize int) [][]string {
+	var chunks [][]string
+	for i := 0; i < len(slice); i += chunkSize {
+		end := i + chunkSize
+
+		// necessary check to avoid slicing beyond
+		// slice capacity
+		if end > len(slice) {
+			end = len(slice)
+		}
+
+		chunks = append(chunks, slice[i:end])
+	}
+
+	return chunks
+}
+
+func EmailController(writer http.ResponseWriter, request *http.Request) {
   defer request.Body.Close()
 
   requestBytes, err := ioutil.ReadAll(request.Body)
@@ -78,22 +61,33 @@ func (a *Application) emailController(writer http.ResponseWriter, request *http.
 		return
 	}
 
+  smtpServer := SMTPServer{
+    Host: viper.GetString("smtp_host"),
+    Port: viper.GetString("smtp_port"),
+    Password: viper.GetString("smtp_password"),
+  }
+
   var params MailParameters
   json.Unmarshal(requestBytes, &params)
 
-  to  := []string { params.FromEmail }
+  to  := []string {}
   cc  := []string {}
-  bcc := params.MailList()
 
-  mail_request := Mail {
-    Sender: params.FromEmail,
-    To: to,
-    Cc: cc,
-    Bcc: bcc,
-    Subject: params.Subject,
-    Body: params.Body,
+  bcc_chunks := chunkSlice(params.MailList(), 10)
+  from_chunk := []string { params.FromEmail }
+  bcc_chunks = append(bcc_chunks, from_chunk)
+
+  for _, chunk := range chunks {
+    mail_request := Mail {
+      Sender: params.FromEmail,
+      To: to,
+      Cc: cc,
+      Bcc: bcc_chunks,
+      Subject: params.Subject,
+      Body: params.Body,
+    }
+
+    fmt.Println("request: ", mail_request)
+    send(smtpServer, mail_request)
   }
-
-  fmt.Println("request: ", mail_request)
-	send(mail_request)
 }

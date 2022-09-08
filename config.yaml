@@ -1,0 +1,7 @@
+# alterconso-mailer server configuration
+server_host: 0.0.0.0
+server_port: 5000
+
+# smtp server used to send emails
+smtp_host: ssl0.ovh.net
+smtp_port: 465
