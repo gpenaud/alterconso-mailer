@@ -43,8 +43,8 @@ sops-decrypt:
 test:
 	@bash tests/send.sh
 
-test-warn-opening-order:
-	@go run main.go warn-opening-order
+test-remind:
+	@go run main.go remind
 
 ## Build webapp image
 build:

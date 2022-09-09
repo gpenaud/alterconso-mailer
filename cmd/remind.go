@@ -9,6 +9,9 @@ import (
   log   "github.com/sirupsen/logrus"
   mysql "gorm.io/driver/mysql"
   template "html/template"
+  json "encoding/json"
+  http "net/http"
+  ioutil "io/ioutil"
 )
 
 var remindCmd = &cobra.Command{
@@ -32,6 +35,12 @@ func init() {
 
   remindCmd.Flags().StringP("group-name", "g", "", "Alterconso group name (EXAMPLE: Alterconso du Val de Brenne)")
 	viper.BindPFlag("group_name", remindCmd.Flags().Lookup("group-name"))
+
+  remindCmd.Flags().StringP("sender-name", "", "", "Mail sender name (EXAMPLE: Administrateur du groupe Alterconso du Val de Brenne)")
+	viper.BindPFlag("sender_name", remindCmd.Flags().Lookup("sender-name"))
+
+  remindCmd.Flags().StringP("sender-mail", "", "", "Mail sender address (EXAMPLE: alterconso@leportail.org)")
+	viper.BindPFlag("sender_mail", remindCmd.Flags().Lookup("sender-mail"))
 
   rootCmd.AddCommand(remindCmd)
 }
@@ -59,8 +68,35 @@ type MailTemplate struct {
   TemplateAddress string
 }
 
+type MailAddress struct {
+  Email string `json:"email"`
+}
+
 type MailObject struct {
-  Html bytes.Buffer
+  Subject string   `json:"subject"`
+  Html    string   `json:"html"`
+  FromName string  `json:"from_name"`
+  FromEmail string `json:"from_email"`
+  To []MailAddress `json:"to"`
+}
+
+func send(json []byte) {
+  url := "http://0.0.0.0:5000/send"
+  req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
+  req.Header.Set("Content-Type", "application/json")
+
+  fmt.Println(req)
+
+  client := &http.Client{}
+  resp, err := client.Do(req)
+  if err != nil {
+    panic(err)
+  }
+
+  defer resp.Body.Close()
+  body, err := ioutil.ReadAll(resp.Body)
+
+  fmt.Println(string(body))
 }
 
 //runs the server and also does the calculations and send result to client
@@ -82,23 +118,16 @@ func remind(cmd *cobra.Command, args []string) {
   // 7: 4h,24h,Ouverture
   // 6: 24h,Ouverture
   // 4: Ouverture
-  var to []string
+  var to []MailAddress
 
   for _, u := range user {
     if u.Flags >= 4 {
-      to = append(to, u.Email)
-
+      to = append(to, MailAddress{ Email: u.Email })
       if u.Email2 != "" {
-        to = append(to, u.Email2)
+        to = append(to, MailAddress{ Email: u.Email2 })
       }
     }
   }
-
-  // fmt.Println(to)
-  fmt.Println(viper.Get("subject"))
-  fmt.Println(viper.Get("group_name"))
-  fmt.Println(viper.Get("template_name"))
-  fmt.Println(viper.Get("template_address"))
 
   t := template.New("opening_order.tmpl")
   body_template_name := fmt.Sprintf("templates/%s.tmpl", viper.GetString("template_name"))
@@ -113,16 +142,29 @@ func remind(cmd *cobra.Command, args []string) {
     TemplateAddress : viper.GetString("template_address"),
   }
 
-  o := MailObject{}
+  // for testing purposes
+  to = []MailAddress{ { Email: "guillaume.penaud@gmail.com" } }
 
-  err = parsedTemplate.Execute(&o.Html, m)
+  o := MailObject{
+    Subject: viper.GetString("subject"),
+    FromName: fmt.Sprintf("Administrateur du groupe \"%s\"", viper.GetString("group_name")),
+    FromEmail: viper.GetString("sender_name"),
+    To: to,
+  }
+
+  var buffer bytes.Buffer
+
+  err = parsedTemplate.Execute(&buffer, m)
   if err != nil {
-    fmt.Println("test")
   	panic(err)
 	}
 
-  fmt.Println(o.Html.String())
+  o.Html = buffer.String()
 
-  log.Info("remind has sent mail !")
-  return
+  json, err := json.Marshal(o)
+  if err != nil {
+    panic(err)
+  }
+
+  send(json)
 }
