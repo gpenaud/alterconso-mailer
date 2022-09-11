@@ -52,8 +52,6 @@ func (mail *Mail) BuildMessage() string {
 }
 
 func send(smtpServer SMTPServer, mail Mail) {
-	log.Info(smtpServer)
-
 	messageBody := mail.BuildMessage()
 	smtpServer.TLSConfig = &tls.Config{
 		InsecureSkipVerify: true,
@@ -116,6 +114,6 @@ func send(smtpServer SMTPServer, mail Mail) {
 
 	client.Quit()
 
-	log.Println(messageBody)
+	// log.Println(messageBody)
 	log.Println("Mail sent successfully")
 }

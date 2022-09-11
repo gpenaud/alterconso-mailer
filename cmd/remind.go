@@ -73,19 +73,19 @@ type MailAddress struct {
 }
 
 type MailObject struct {
-  Subject string   `json:"subject"`
-  Html    string   `json:"html"`
-  FromName string  `json:"from_name"`
-  FromEmail string `json:"from_email"`
-  To []MailAddress `json:"to"`
+  Subject   string        `json:"subject"`
+  Html      string        `json:"html"`
+  FromName  string        `json:"from_name"`
+  FromEmail string        `json:"from_email"`
+  To        []MailAddress `json:"to"`
 }
 
-func send(json []byte) {
+func send(json *[]byte) {
   url := "http://0.0.0.0:5000/send"
-  req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
+  req, err := http.NewRequest("POST", url, bytes.NewBuffer(*json))
   req.Header.Set("Content-Type", "application/json")
 
-  fmt.Println(req)
+  // fmt.Println(req)
 
   client := &http.Client{}
   resp, err := client.Do(req)
@@ -129,7 +129,8 @@ func remind(cmd *cobra.Command, args []string) {
     }
   }
 
-  t := template.New("opening_order.tmpl")
+  template_title := fmt.Sprintf("%s.tmpl", viper.GetString("template_name"))
+  t := template.New(template_title)
   body_template_name := fmt.Sprintf("templates/%s.tmpl", viper.GetString("template_name"))
   parsedTemplate, err := t.ParseFiles("templates/_before.tmpl", body_template_name, "templates/_after.tmpl")
 
@@ -148,7 +149,7 @@ func remind(cmd *cobra.Command, args []string) {
   o := MailObject{
     Subject: viper.GetString("subject"),
     FromName: fmt.Sprintf("Administrateur du groupe \"%s\"", viper.GetString("group_name")),
-    FromEmail: viper.GetString("sender_name"),
+    FromEmail: viper.GetString("sender_mail"),
     To: to,
   }
 
@@ -161,10 +162,12 @@ func remind(cmd *cobra.Command, args []string) {
 
   o.Html = buffer.String()
 
-  json, err := json.Marshal(o)
+  json_content, err := json.Marshal(o)
+  // _ = ioutil.WriteFile("dump.json", json_content, 0644)
+
   if err != nil {
     panic(err)
   }
 
-  send(json)
+  send(&json_content)
 }
