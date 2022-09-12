@@ -35,10 +35,10 @@ enter:
 	docker exec --interactive --tty alterconso-mailer-development /bin/sh
 
 sops-encrypt:
-	sops --encrypt secrets.yaml > secrets.enc.yaml && mv --force secrets.enc.yaml secrets.yaml
+	sops --encrypt config.yaml > config.enc.yaml && mv --force config.enc.yaml config.yaml
 
 sops-decrypt:
-	sops --decrypt secrets.yaml > secrets.dec.yaml && mv --force secrets.dec.yaml secrets.yaml
+	sops --decrypt config.yaml > config.dec.yaml && mv --force config.dec.yaml config.yaml
 
 test:
 	@bash tests/send.sh
