@@ -61,7 +61,7 @@ func send(smtpServer SMTPServer, mail Mail) {
 	fmt.Println("Connection parameters:\n")
 	fmt.Println(smtpServer.ServerName())
 	fmt.Println(smtpServer.TLSConfig)
-	fmt.Println(Sender.Sender)
+	fmt.Println(mail.Sender)
 	fmt.Println(smtpServer.Password)
 	fmt.Println(smtpServer.Host)
 
