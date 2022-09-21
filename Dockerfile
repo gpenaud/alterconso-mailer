@@ -55,4 +55,4 @@ COPY --chown=alterconso-mailer:alterconso-mailer --from=build /application/confi
 EXPOSE 5000
 
 ENTRYPOINT ["./alterconso-mailer"]
-CMD ["serve"]
+CMD ["serve", "--config-file", "config.yaml"]
