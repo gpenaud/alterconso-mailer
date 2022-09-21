@@ -58,6 +58,10 @@ func send(smtpServer SMTPServer, mail Mail) {
 		ServerName:         smtpServer.Host,
 	}
 
+	fmt.Println("Connection parameters:")
+	fmt.Println("server: " + smtpServer.ServerName())
+	fmt.Println("tls: " + smtpServer.TLSConfig)
+
 	auth := smtp.PlainAuth("", mail.Sender, smtpServer.Password, smtpServer.Host)
 	conn, err := tls.Dial("tcp", smtpServer.ServerName(), smtpServer.TLSConfig)
 	if err != nil {
