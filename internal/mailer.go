@@ -120,7 +120,5 @@ func send(smtpServer SMTPServer, mail Mail) {
 	}
 
 	client.Quit()
-
-	// log.Println(messageBody)
-	log.Println("Mail sent successfully")
+	log.Println("Mail sent successfully from mailer")
 }

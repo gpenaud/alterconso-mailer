@@ -14,7 +14,7 @@ bin = "tmp/app"
 
 # Customize binary.
 # This is how you start to run your application. Since my application will works like CLI, so to run it, like to make a CLI call.
-full_bin = "./alterconso-mailer serve --config-file config.yaml --secrets-file secrets.yaml"
+full_bin = "./alterconso-mailer serve --config-file config.yaml"
 
 # This log file places in your tmp_dir.
 log = "air_errors.log"

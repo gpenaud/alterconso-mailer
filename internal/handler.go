@@ -88,6 +88,12 @@ func EmailController(writer http.ResponseWriter, request *http.Request) {
     }
 
     fmt.Println("request: ", mail_request)
+    fmt.Println("smtp_server: ", smtpServer)
+
     send(smtpServer, mail_request)
   }
+
+  writer.Header().Set("Content-Type", "application/json")
+  payload := struct{ Status string `json:"status"` }{ Status: "sent" }
+  json.NewEncoder(writer).Encode(&payload)
 }
