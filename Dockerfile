@@ -51,7 +51,7 @@ USER alterconso-mailer
 
 COPY --chown=alterconso-mailer:alterconso-mailer --from=build /alterconso-mailer .
 COPY --chown=alterconso-mailer:alterconso-mailer --from=build /application/config.yaml .
-COPY --chown=alterconso-mailer:alterconso-mailer --from=build /application/templates .
+COPY --chown=alterconso-mailer:alterconso-mailer --from=build /application/templates templates/
 
 EXPOSE 5000
 
