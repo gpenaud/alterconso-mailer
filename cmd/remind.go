@@ -24,6 +24,15 @@ var remindCmd = &cobra.Command{
 
 //adds serverCmd to rootCmd
 func init() {
+  remindCmd.Flags().StringP("database-uri", "d", "127.0.0.1:3306", "The database URI to use (DEFAULT: 127.0.0.1:3306)")
+	viper.BindPFlag("database_uri", remindCmd.Flags().Lookup("database-uri"))
+
+  remindCmd.Flags().StringP("database-user", "", "docker", "The database user to use (DEFAULT: \"docker\")")
+	viper.BindPFlag("database_user", remindCmd.Flags().Lookup("database-user"))
+
+  remindCmd.Flags().StringP("database-password", "p", "docker", "The database password to connect with (DEFAULT: \"docker\")")
+	viper.BindPFlag("database_password", remindCmd.Flags().Lookup("database-password"))
+
   remindCmd.Flags().StringP("subject", "s", "", "The mail subject (EXAMPLE: \"Orders are opened !\")")
 	viper.BindPFlag("subject", remindCmd.Flags().Lookup("subject"))
 
@@ -85,8 +94,6 @@ func send(json *[]byte) {
   req, err := http.NewRequest("POST", url, bytes.NewBuffer(*json))
   req.Header.Set("Content-Type", "application/json")
 
-  // fmt.Println(req)
-
   client := &http.Client{}
   resp, err := client.Do(req)
   if err != nil {
@@ -101,7 +108,14 @@ func send(json *[]byte) {
 
 //runs the server and also does the calculations and send result to client
 func remind(cmd *cobra.Command, args []string) {
-  dsn := "docker:docker@tcp(127.0.0.1:3306)/db?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn := fmt.Sprintf(
+    "%s:%s@tcp(%s)/db?charset=utf8mb4&parseTime=True&loc=Local",
+    viper.GetString("database_user"),
+    viper.GetString("database_password"),
+    viper.GetString("database_uri"),
+  )
+
+  fmt.Println("DSN: " + dsn)
   db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
   if err != nil {

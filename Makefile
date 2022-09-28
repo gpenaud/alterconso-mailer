@@ -44,22 +44,24 @@ test:
 	@bash tests/send.sh
 
 test-remind:
-	@go run main.go remind
+	@go run main.go remind --database-uri 127.0.0.1:3306 --database-user docker --database-password docker --subject "Les commandes sont ouvertes" --group-name "Alterconso du Val de Brenne" --template-name "opening_order" --template-address "alterconso.leportail.org" --sender-mail "alterconso.leportail.org" 
 
 ## Build webapp image
 build:
 	@[ "${CURRENT_TAG}" ] || echo "no tag found at commit ${COMMIT}"
-	@[ "${CURRENT_TAG}" ] && docker build --file _build/Dockerfile --tag alterconso/mailer:${CURRENT_TAG} .
+	@[ "${CURRENT_TAG}" ] && docker build --file Dockerfile --tag alterconso/mailer:${CURRENT_TAG} .
 
 ## Tag webapp image
 tag:
 	@[ "${CURRENT_TAG}" ] || echo "no tag found at commit ${COMMIT}"
 	@[ "${CURRENT_TAG}" ] && docker tag alterconso/mailer:${CURRENT_TAG} rg.fr-par.scw.cloud/le-portail/alterconso/mailer:${CURRENT_TAG}
+	@[ "${CURRENT_TAG}" ] && docker tag alterconso/mailer:${CURRENT_TAG} rg.fr-par.scw.cloud/le-portail-development/alterconso/mailer:${CURRENT_TAG}
 
 ## Push webapp image to scaleway repository
 push:
 	@[ "${CURRENT_TAG}" ] || echo "no tag found at commit ${COMMIT}"
 	@[ "${CURRENT_TAG}" ] && docker push rg.fr-par.scw.cloud/le-portail/alterconso/mailer:${CURRENT_TAG}
+	@[ "${CURRENT_TAG}" ] && docker push rg.fr-par.scw.cloud/le-portail-development/alterconso/mailer:${CURRENT_TAG}
 
 ## Build, Tag, then Push image at ${tag} version
 publish: build tag push
