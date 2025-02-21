@@ -1,0 +1,26 @@
+workflow:
+  rules:
+    # If current commit does not have a tag, don't create a pipeline.
+    - if: $CI_COMMIT_TAG == null
+      when: never
+    - when: always
+
+build-image:
+  extends: .build
+  variables:
+    IMAGE_NAME: alterconso/mailer
+    IMAGE_REGISTRY: rg.fr-par.scw.cloud/le-portail-development
+
+push-image:
+  extends: .push
+  variables:
+    IMAGE_NAME: alterconso/mailer
+    IMAGE_REGISTRY: rg.fr-par.scw.cloud/le-portail-development
+
+include:
+  - local: ./../../.gitlab/build.yml
+  - local: ./../../.gitlab/push.yml
+
+stages:
+  - build
+  - push

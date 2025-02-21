@@ -1,2 +1,8 @@
-smtp_host: mail.leportail.org
-smtp_port: 587
+server_host: 0.0.0.0
+server_port: 5000
+
+smtp_host: ssl0.ovh.net
+smtp_port: 465
+
+smtp_username: alterconso@leportail.org
+smtp_password: # *********

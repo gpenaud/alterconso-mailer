@@ -1,9 +1,5 @@
-.gitignore
-environment.txt
-LICENSE
-Makefile
-README.md
+.git
+.air.toml
 Dockerfile
-tests/data.json
-secrets.enc.yaml
-secrets.dec.yaml
+Dockerfile.development
+Makefile
