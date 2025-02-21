@@ -114,7 +114,7 @@ func send(smtpServer SMTPServer, mail Mail) {
 		log.Panic(err)
 	}
 
-	err = wr.Close()
+	err = client.Close()
 	if err != nil {
 		log.Panic(err)
 	}
