@@ -1,38 +1,8 @@
-#ENC[AES256_GCM,data:Z5BBNMlGC4n7ZiofneEnbvmShNPfdyNoK68/NyUR1uWFGQWkOauJ,iv:q3Tc/2dmP/F02SvDp8uFuQbAksai8m+QbE6fbYoF8l4=,tag:eIzQWZVGviXZJh64cBh5Bw==,type:comment]
-server_host: ENC[AES256_GCM,data:z/Gtr7ayOA==,iv:vaUQbQmtO5/C9oEnmUVk3QyCrFxdMPl11MRW47s/3vo=,tag:qGNmQsrnMONQm0UX/zSUIg==,type:str]
-server_port: ENC[AES256_GCM,data:724Rtw==,iv:TZBd/GPDzZWhIVacf1DfE/FxHK26oNCA7x5Sb4VhUCk=,tag:kl4YWHdRoLA2P8neTn/e3A==,type:int]
-#ENC[AES256_GCM,data:01KakrfocQF8yDMcSVvoehnEf4oFmlMmdJQNsuPhUbw=,iv:uOQ/WtaqjvTClUcQwxRsFOMPfzWmLcPasuSrj7Hi7kA=,tag:83ijpv8kdv5Z32bZ/BX4Ig==,type:comment]
-smtp_host: ENC[AES256_GCM,data:dTmnJ+BF61YGLK0+,iv:NZu4hIZlKqZ5bkR5MKPpq8XPKkwO0XD4wtcSXds66Vc=,tag:sdcMaQeyd5VnS0vLM/GYhw==,type:str]
-smtp_port: ENC[AES256_GCM,data:b7ae,iv:c3A+USpV9YqzMuP7fzpqZJ+ErgBMYEcwCsC1SMmooSw=,tag:qDbsJ4yrMiQuiHPpa2wQhQ==,type:int]
-#ENC[AES256_GCM,data:7hu/xUQdm7k4t4V7yQ==,iv:6me7L4laeskYtEU6QtPCsAyKXo4Axss/CO1JG4D58Xs=,tag:z12kIl8RBg1m/6Dm24esoQ==,type:comment]
-smtp_username: ENC[AES256_GCM,data:nGh0eHm5gwggj4KOJ2H0ko6s4rDbfYQs,iv:8jY6D5OqLMzImE6ZpJVEfRAIlg1aSBFmjjNCenIPrzE=,tag:VmkAlpc24Mz2unEKE5Q64A==,type:str]
-smtp_password: ENC[AES256_GCM,data:Dcq8QAm8tvfa,iv:SkAxUK38qrllsRqouTwME4USyBbrBovASMr17ng/QHo=,tag:Uy99DCMn+7Tble1huEm03g==,type:str]
-sops:
-    kms: []
-    gcp_kms: []
-    azure_kv: []
-    hc_vault: []
-    age: []
-    lastmodified: "2022-09-12T09:38:03Z"
-    mac: ENC[AES256_GCM,data:uNcqtIGiWBhvUjK/3Ww7O+860XfdyQEtt0rglPiJpY1zQOVv52UcqKdUF25Umc6+qW1Uj7Y3xa5YqWsWzmxIYzlb+IJ42B4FbwKk5iYFeNkCRXwZRyoZfFXC3fYtsmakPmt5nesPqCqaIArggeuHp/+2yfHrT7HDOjp83xuZ4FE=,iv:qYjI9CZ+S2lByeAl1Ly1lgGglD8DPV1ncnCewTDw6Uc=,tag:UfAc7KNz497/7/baloHpgA==,type:str]
-    pgp:
-        - created_at: "2022-09-12T09:38:02Z"
-          enc: |
-            -----BEGIN PGP MESSAGE-----
+server_host: 0.0.0.0
+server_port: 5000
 
-            hQGMAxhfkHuNHvXMAQv/We7EvV+oyHoblVNmUgQ2lCMye+eaYDdNGzveg1ZWItnI
-            v1/iqTvvAI055LgjPIcNwYKORseoU6N0cXXuWRISlgKhn3PzIXT8bC0qc62eIjKy
-            sFYoNwONqj6GUV1xsDsJKqRzLBPsp7GuQzUVhFSfyM3D/K9/dGExiagkEaZGTF2c
-            vrIFrQ89d89HRwuOaDwWn+O8m1FWulYDw/51pBB3drsOhMZYWd9T1+lM4u4Ze5zn
-            OGwkh2Wwwv3f0dIpTj0lIkcyC6UEJbi6yzTsIS9bxa9Dfccpi65zmj2SCNy1VkO8
-            lnH3b36c6jqlS0CB62fCIxNIAgX9j6bxjf5rqmKXz8cRk2VwNWsz2aDjf7xbz92y
-            oYSWr98YGRUhaLAXeqQR7oBIgqiWq+rm4NseYQMdAXYipya8y7c6of1ZrxV2zxFv
-            viLC5fEcV2NDdMXjcqiZAuYaxSbgzhd7+7cAkelQhEMCzNuyXxGnniAM/mHS4A3Z
-            aDn+lhK4NKvtL1xqL9sr0lwBXNksF/epiZupTTDOv/2Tv/cjf64NgzPTKmAWB+R+
-            jZC447S3eJbzQTAvPCKggiT4uOKbkpONgW7OGK0pKu7LcqOYl2pphkywVWkJVVrA
-            37f9zRGzM6fbTOvE8A==
-            =7OVb
-            -----END PGP MESSAGE-----
-          fp: 20AB6E5725948E28F11E1D731D556C252EDB1676
-    unencrypted_suffix: _unencrypted
-    version: 3.7.3
+smtp_host: ssl0.ovh.net
+smtp_port: 465
+
+smtp_username: alterconso@leportail.org
+smtp_password: # *********
